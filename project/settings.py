@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 from pathlib import Path
+import dj_database_url
 import os
 from django.contrib.messages import constants
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -80,19 +81,18 @@ WSGI_APPLICATION = 'project.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
-
-DATABASES = {
-'default':{
-    'ENGINE':os.getenv('DATABASE_ENGINE'),
-        'NAME': os.getenv('DATABASE_NAME'),
-    'USER': os.getenv('DATABASE_USER'),
-    'PASSWORD': os.getenv('DATABASE_PASSWORD'),
-    'HOST': os.getenv('DATABASE_HOST'),
-    'PORT': '5432',
-    'OPTIONS': {
-        'sslmode': 'require',
-    },
-}
+if DEBUG:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
+else:
+    DATABASES = {
+    'default': dj_database_url.parse(
+        'postgresql://default:wCYy9oTB4fiU@ep-quiet-dust-a4isja2n-pooler.us-east-1.aws.neon.tech/verceldb?sslmode=require&channel_binding=require'
+    )
 }
 print("USER:", os.getenv("DATABASE_USER"))
 print("HOST:", os.getenv("DATABASE_HOST"))
